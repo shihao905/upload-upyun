@@ -1,0 +1,26 @@
+{
+  "name": "anve-upload-upyun",
+  "version": "1.0.0",
+  "description": "上传又拍云插件",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shihao905/upload-upyun.git"
+  },
+  "keywords": [
+    "upload-upyun",
+    "upyun"
+  ],
+  "author": "shihao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shihao905/upload-upyun/issues"
+  },
+  "homepage": "https://github.com/shihao905/upload-upyun#readme",
+  "dependencies": {
+    "upyun": "^3.3.5"
+  }
+}
