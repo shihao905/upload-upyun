@@ -17,9 +17,10 @@ class UpyunUpload {
     this.uploadFiles = [];
     this.errorFiles = [];
     this.confirm();
+    this.uploading = false;
   }
   confirm() {
-    // process.stdin.setEncoding('utf8');
+    process.stdin.setEncoding('utf8');
     console.log(fontColor.yellow, `请确认上传信息：`);
     console.log(fontColor.green, `---服务名：${this.serviceName}`);
     console.log(fontColor.green, `---操作员：${this.operatorName}`);
@@ -28,10 +29,13 @@ class UpyunUpload {
     console.log(fontColor.green, `---上传服务器路径：${this.remoteFilePath}`);
     console.log(fontColor.yellow, `确认开始上传吗(N/y)？`);
     process.stdin.on('data',(input)=>{
+      if (this.uploading) return;
       input = input.toString().trim();
       if (['Y', 'y', 'YES', 'yes'].indexOf(input) > -1) {
+        this.uploading = true;
         this.init(()=>{
           process.exit();
+          this.uploading = false;
         });
       }else {
         process.exit();
