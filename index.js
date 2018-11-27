@@ -1,6 +1,7 @@
 'use strict'
 const upyun = require("upyun");
 const fs = require('fs');
+const path = require('path');
 const fontColor = require("./style");
 const ProgressBar = require("./progress");
 const Upyun = upyun.Client;
@@ -38,7 +39,8 @@ class UpyunUpload {
     })
   }
   init(exit) {
-    this.getFileList(()=>{
+    this.getFileList((list)=>{
+      this.filesList = list;
       if (!this.filesList.length) {
         console.log(fontColor.yellow, "未找到可以上传的文件");
         return;
@@ -64,27 +66,25 @@ class UpyunUpload {
       })
     })
   }
+  getFileByDir(dirPath,list){
+    fs.readdirSync(dirPath).map(url => {
+      let u = dirPath + "/" + url;
+      if (u.charAt(0) !== "." && fs.existsSync(u)) {
+        if (fs.statSync(u).isDirectory()) {
+          this.getFileByDir(u,list);
+        } else {
+          list.push({
+            key: this.remoteFilePath + u.slice(this.filePath.length),
+            localFile: u
+          })
+        }
+      }
+    })
+  }
   getFileList(cb) {
     let filesList = [];
-    fs.readdir(this.filePath, (err, files) => {
-      if (!err) {
-        files.map(path => {
-          if (
-            path.charAt(0) !== "." &&
-            fs.statSync(this.filePath + "/" + path).isFile()
-          ) {
-            filesList.push({
-              key: (this.remoteFilePath || "") + "/" + path,
-              localFile: (this.filePath || "") + "/" + path
-            });
-          }
-        });
-        this.filesList = filesList;
-        cb && cb();
-      } else {
-        console.log(error);
-      }
-    });
+    this.getFileByDir(this.filePath, filesList);
+    cb && cb(filesList);
   }
   uploadFile(file, cb) {
     const client = new Upyun(new Service(this.serviceName, this.operatorName, this.password))
