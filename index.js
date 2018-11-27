@@ -19,7 +19,7 @@ class UpyunUpload {
     this.confirm();
   }
   confirm() {
-    process.stdin.setEncoding('utf8');
+    // process.stdin.setEncoding('utf8');
     console.log(fontColor.yellow, `请确认上传信息：`);
     console.log(fontColor.green, `---服务名：${this.serviceName}`);
     console.log(fontColor.green, `---操作员：${this.operatorName}`);
@@ -50,9 +50,7 @@ class UpyunUpload {
       this.filesList.map(file=>{
         this.uploadFile(file,(res)=>{
           this.uploadFiles.push(file);
-          if (!res.success) {
-            this.errorFiles.push(file);
-          }
+          !res && this.errorFiles.push(file);
           pb.render({
             completed: this.uploadFiles.length,
             total: this.filesList.length
@@ -86,28 +84,13 @@ class UpyunUpload {
     this.getFileByDir(this.filePath, filesList);
     cb && cb(filesList);
   }
-  uploadFile(file, cb) {
+  uploadFile(file, callBack) {
     const client = new Upyun(new Service(this.serviceName, this.operatorName, this.password))
-    client.formPutFile(file.key, fs.createReadStream(file.localFile)).then(res=>{
-      if (res && res.url) {
-        cb&&cb({
-          success:true,
-          data:res
-        })
-      } else {
-        console.log(fontColor.red, "上传失败：" + file.localFile);
-        cb&&cb({
-          success:false,
-          data:res
-        })
-
-      }
+    client.putFile(file.key, fs.readFileSync(file.localFile)).then(res=>{
+      callBack(res);
     }).catch(error=>{
-      console.log('uploadFile error',error)
-      cb&&cb({
-        success:false,
-        data:error
-      })
+      callBack(false);
+      console.log(fontColor.red, "上传失败：" + file.localFile);
     })
   }
 }
