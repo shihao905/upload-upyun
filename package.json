@@ -1,6 +1,6 @@
 {
   "name": "anve-upload-upyun",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "上传又拍云插件",
   "main": "index.js",
   "scripts": {

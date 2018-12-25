@@ -19,7 +19,7 @@ new UpyunUpload({
   /**
    * 上传的服务名
   */
-  serviceName: 'testultimavipweb',
+  serviceName: '********',
   /**
    * 操作员账号
   */
@@ -58,5 +58,3 @@ new UpyunUpload({
 ```
 
 ## upload the prompt  
-
-![](https://img2.ultimavip.cn/ultimavip/ultimavip-uplaod.png)
