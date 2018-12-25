@@ -13,10 +13,18 @@ class UpyunUpload {
     this.password = option.password || '';
     this.filePath = option.filePath || '';
     this.remoteFilePath = option.remoteFilePath || '';
+    this.loadSuccess = option.success || (()=>{});
+    this.loadError = option.error || (()=>{});
+    this.remoteFilePath = option.remoteFilePath || '';
+    if (typeof option.openConfirm == 'boolean') {
+      this.openConfirm = option.openConfirm;
+    } else {
+      this.openConfirm = true;
+    }
     this.filesList = [];
     this.uploadFiles = [];
     this.errorFiles = [];
-    this.confirm();
+    this.openConfirm ? this.confirm() : this.init();
     this.uploading = false;
   }
   confirm() {
@@ -62,6 +70,12 @@ class UpyunUpload {
 
           if (this.uploadFiles.length == this.filesList.length) {
             console.log(fontColor.green, "上传完成！");
+            if (this.errorFiles.length) {
+              console.log(fontColor.red, this.errorFiles.map(res=>(`上传失败：${res.localFile}`)).join('\n'))
+              this.loadError(this.errorFiles);
+            } else {
+              this.loadSuccess(this.uploadFiles);
+            }
             exit&&exit();
           }
         });
