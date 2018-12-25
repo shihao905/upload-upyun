@@ -85,7 +85,7 @@ class UpyunUpload {
   getFileByDir(dirPath,list){
     fs.readdirSync(dirPath).map(url => {
       let u = dirPath + "/" + url;
-      if (u.charAt(0) !== "." && fs.existsSync(u)) {
+      if (url.charAt(0) !== "." && fs.existsSync(u)) {
         if (fs.statSync(u).isDirectory()) {
           this.getFileByDir(u,list);
         } else {
